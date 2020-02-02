@@ -2,6 +2,20 @@
     <meta charset="utf-8">
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script>
+
+     function saveSvg(svgEl, name) {
+         svgEl.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+         var svgData = svgEl.outerHTML;
+         var preface = '<?xml version="1.0" standalone="no"?>\r\n';
+         var svgBlob = new Blob([preface, svgData], {type:"image/svg+xml;charset=utf-8"});
+         var svgUrl = URL.createObjectURL(svgBlob);
+         var downloadLink = document.createElement("a");
+         downloadLink.href = svgUrl;
+         downloadLink.download = name;
+         document.body.appendChild(downloadLink);
+         downloadLink.click();
+         document.body.removeChild(downloadLink);
+     }
      var data;
      d3.json("clock.json", function(error, data) {})
        .then(json =>
@@ -62,7 +76,14 @@
                   .attr("dy", "0.35em")
                   .text(d => d.data.name.substring(0,18).concat((d.data.name.length > 18 ? '...': '')));
                svg.attr("viewBox", autoBox);
+
+
+               //get svg element.
+               var svg2 = document.getElementsByTagName('svg')
+               //get svg source.
+               saveSvg(svg2[0], 'save.svg');
        });
+
     </script>
 </head>
 <body>
