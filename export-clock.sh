@@ -4,3 +4,6 @@ emacs -batch -l "~/.emacs.d/init.el"  \
       > clock.csv
 
 python convert_csv_clock_to_json.py
+
+python -m http.server
+open 0.0.0.0:8000/clock.html
