@@ -3,7 +3,7 @@ emacs -batch -l "~/.emacs.d/init.el"  \
       ~/org/*.org \
       > clock.csv
 
-python convert_csv_clock_to_json.py
+python convert_csv_clock_to_json.py < clock.csv > clock.json
 
 python -m http.server
-open 0.0.0.0:8000/clock.html
+open http://0.0.0.0:8000/clock.html
