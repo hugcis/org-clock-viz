@@ -10,12 +10,14 @@ class ExportKind(enum.Enum):
     L_7DAYS = 1
     CURR_WEEK = 2
     LAST_WEEK = 3
+    ALL = 4
 
 
 MAP_EXPORT = {
     "last_7_days": ExportKind.L_7DAYS,
     "current_week": ExportKind.CURR_WEEK,
-    "last_week": ExportKind.LAST_WEEK
+    "last_week": ExportKind.LAST_WEEK,
+    "all": ExportKind.ALL
 }
 
 
@@ -74,11 +76,9 @@ def csv_to_json_hierarchy(input_file, output_file, kind=None):
         if today.weekday() != 0:
             t = today - dt.timedelta(days=-today.weekday(), weeks=1)
         else:
-            t = today - dt.timedelta(seconds=0)
+            t = today
         t = dt.datetime.combine(t, dt.datetime.min.time())
         df = df.loc[df['start'] >= t]
-    elif kind is not None:
-        raise ValueError("Enter correct date options")
 
     df['time'] = (pd.to_numeric(df['end'] - df['start'])/10**9)/60
     df['parents'] = df['parents'].fillna('Top')
@@ -131,8 +131,9 @@ if __name__ == "__main__":
                         type=argparse.FileType('w'),
                         default=sys.stdout)
     parser.add_argument("--dates", "-d",
-                        choices=["last_7_days", "current_week", "last_week"],
-                        default="current_week")
+                        choices=["last_7_days", "current_week",
+                                 "last_week", "all"],
+                        default="all")
 
     args = parser.parse_args()
 
